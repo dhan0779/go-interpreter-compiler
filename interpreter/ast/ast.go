@@ -60,7 +60,7 @@ func (ls *LetStatement) String() string {
 	out.WriteString(" = ")
 
 	if ls.Value != nil {
-		out.WriteString(ls.Name.Value) // .String()
+		out.WriteString(ls.Value.String())
 	}
 
 	out.WriteString(";")
