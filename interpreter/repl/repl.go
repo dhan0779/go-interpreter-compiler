@@ -3,9 +3,9 @@ package repl
 import (
 	"bufio"
 	"fmt"
-	"interpreter/evaluator"
 	"interpreter/lexer"
 	"interpreter/parser"
+	"interpreter/evaluator"
 	"io"
 )
 
