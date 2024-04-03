@@ -59,7 +59,7 @@ func (ls *LetStatement) String() string {
 	out.WriteString(" = ")
 
 	if ls.Value != nil {
-		out.WriteString(ls.Name.Value.String())
+		out.WriteString(ls.Name.Value) // .String()
 	}
 
 	out.WriteString(";")
@@ -74,7 +74,7 @@ type Identifier struct {
 func (i *Identifier) expressionNode() {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
 
-func ( *Identifier) String() string { return i.Value }
+func (i *Identifier) String() string { return i.Value }
 
 type ReturnStatement struct {
 	Token token.Token
@@ -157,3 +157,12 @@ func (ie *InfixExpression) String() string {
 
 	return out.String()
 }
+
+type Boolean struct {
+	Token token.Token
+	Value bool
+}
+
+func (b *Boolean) expressionNode() {}
+func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
+func (b *Boolean) String() string { return b.Token.Literal }
