@@ -42,6 +42,8 @@ const (
 
 	EQ = "=="
 	NOT_EQ = "!="
+
+	STRING = "STRING"
 )
 
 // we also need to map certain keywords to token types
