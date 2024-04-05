@@ -1,8 +1,8 @@
 package main
 
 import (
+	"compiler/repl"
 	"fmt"
-	"compilerxs/repl"
 	"os"
 	"os/user"
 )
