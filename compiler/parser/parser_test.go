@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"interpreter/ast"
-	"interpreter/lexer"
+	"compiler/ast"
+	"compiler/lexer"
 	"testing"
 )
 
