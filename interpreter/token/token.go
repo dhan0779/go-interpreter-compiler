@@ -44,6 +44,9 @@ const (
 	NOT_EQ = "!="
 
 	STRING = "STRING"
+
+	LBRACKET = "["
+	RBRACKET = "]"
 )
 
 // we also need to map certain keywords to token types
