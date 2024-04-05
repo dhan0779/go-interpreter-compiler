@@ -3,6 +3,7 @@ package object
 import (
 	"bytes"
 	"fmt"
+	"hash/fnv"
 	"interpreter/ast"
 	"strings"
 )
@@ -19,6 +20,7 @@ const (
 	STRING_OBJ = "STRING"
 	BUILTIN_OBJ = "BUILTIN"
 	ARRAY_OBJ = "ARRAY"
+	HASH_OBJ = "HASH"
 )
 
 type Object interface {
@@ -119,3 +121,58 @@ func (ao *Array) Inspect() string {
 	return out.String()
 }
 func (ao *Array) Type() ObjectType { return ARRAY_OBJ }
+
+type Hashable interface {
+	HashKey() HashKey
+}
+type HashKey struct {
+	Type ObjectType
+	Value uint64
+}
+
+func (b *Boolean) HashKey() HashKey {
+	var value uint64
+	if b.Value {
+		value = 1
+	} else {
+		value = 0
+	}
+
+	return HashKey{Type: b.Type(), Value: value}
+}
+
+func (i *Integer) HashKey() HashKey {
+	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
+}
+
+// we need this because otherwise string objects would have different pointers/location in memory
+// thus we can use a hashkey to convert the value of the string to a different primitive type first
+func (s *String) HashKey() HashKey {
+	h := fnv.New64a()
+	h.Write([]byte(s.Value))
+	return HashKey{Type: s.Type(), Value: h.Sum64()}
+}
+
+type HashPair struct {
+	Key Object
+	Value Object
+}
+
+type Hash struct {
+	Pairs map[HashKey]HashPair
+}
+
+func (h *Hash) Inspect() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for _, pair := range h.Pairs {
+		pairs = append(pairs, fmt.Sprintf("%s: %s", pair.Key.Inspect(), pair.Value.Inspect()))
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
+	return out.String()
+}
+func (h *Hash) Type() ObjectType { return HASH_OBJ }
