@@ -47,6 +47,8 @@ const (
 
 	LBRACKET = "["
 	RBRACKET = "]"
+
+	COLON = ":"
 )
 
 // we also need to map certain keywords to token types
