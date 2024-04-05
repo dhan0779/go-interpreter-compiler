@@ -33,6 +33,11 @@ func (c *Compiler) Compile(node ast.Node) error {
 				return err
 			}
 		}
+	case *ast.ExpressionStatement:
+		err := c.Compile(node.Expression)
+		if err != nil {
+			return err
+		}
 	case *ast.InfixExpression:
 		err := c.Compile(node.Left)
 		if err != nil {
@@ -40,7 +45,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 		}
 		err = c.Compile(node.Right)
 		if err != nil {
-			return nil
+			return err
 		}
 		switch node.Operator {
 		case "+":
