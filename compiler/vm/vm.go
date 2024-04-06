@@ -34,6 +34,10 @@ func (vm *VM) StackTop() object.Object {
 	return vm.stack[vm.sp-1] // looks at the element below the stack pointer
 }
 
+func (vm *VM) LastPoppedStackElem() object.Object {
+	return vm.stack[vm.sp]
+}
+
 func (vm *VM) Run() error {
 	for ip := 0; ip < len(vm.instructions); ip++ {
 		op := code.Opcode(vm.instructions[ip])
@@ -52,6 +56,8 @@ func (vm *VM) Run() error {
 			leftValue := left.(*object.Integer).Value
 			rightValue := right.(*object.Integer).Value
 			vm.push(&object.Integer{Value: leftValue+rightValue})
+		case code.OpPop:
+			vm.pop()
 		}
 	}
 
