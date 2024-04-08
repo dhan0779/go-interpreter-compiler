@@ -145,13 +145,17 @@ func (c *Compiler) Compile(node ast.Node) error {
 
 		afterAlternativePos := len(c.instructions)
 		c.changeOperand(jumpPos, afterAlternativePos)
-		
 	case *ast.BlockStatement:
 		for _, s := range node.Statements {
 			err := c.Compile(s)
 			if err != nil {
 				return err
 			}
+		}
+	case *ast.LetStatement:
+		err := c.Compile(node.Value)
+		if err != nil {
+			return err
 		}
 	}
 
