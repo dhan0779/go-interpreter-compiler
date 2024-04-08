@@ -11,6 +11,7 @@ const StackSize = 2048
 
 var True = &object.Boolean{Value: true} // keep references since all booleans refer to same value
 var False = &object.Boolean{Value: false}
+var Null = &object.Null{}
 
 func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	if input {
@@ -101,6 +102,11 @@ func (vm *VM) Run() error {
 			condition := vm.pop()
 			if !isTruthy(condition) {
 				ip = pos - 1
+			}
+		case code.OpNull:
+			err := vm.push(Null)
+			if err != nil {
+				return err
 			}
 		}
 	}
@@ -221,6 +227,8 @@ func isTruthy(obj object.Object) bool {
 	switch obj := obj.(type) {
 	case *object.Boolean:
 		return obj.Value
+	case *object.Null:
+		return false
 	default:
 		return true
 	}
