@@ -125,6 +125,17 @@ func (vm *VM) Run() error {
 			if err != nil {
 				return err
 			}
+		case code.OpArray:
+			numElements := int(code.ReadUint16(vm.instructions[ip+1:]))
+			ip += 2
+
+			array := vm.buildArray(vm.sp-numElements, vm.sp)
+			vm.sp = vm.sp - numElements
+			err := vm.push(array)
+
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -161,8 +172,6 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 	default:
 		return fmt.Errorf("unsupported types for binary operation: %s %s", leftType, rightType)
 	}
-
-	return fmt.Errorf("unsupported types for binary operation: %s %s", leftType, rightType)
 }
 
 func (vm *VM) executeBinaryIntegerOperation(op code.Opcode, left object.Object, right object.Object) error {
@@ -271,4 +280,13 @@ func NewWithGlobalsStore(bytecode *compiler.Bytecode, s[]object.Object) *VM {
 	vm := New(bytecode)
 	vm.globals = s
 	return vm
+}
+
+func (vm *VM) buildArray(startIndex int, endIndex int) object.Object {
+	elements := make([]object.Object, endIndex-startIndex)
+	for i := startIndex; i < endIndex; i++ {
+		elements[i-startIndex] = vm.stack[i]
+	}
+
+	return &object.Array{Elements: elements}
 }
