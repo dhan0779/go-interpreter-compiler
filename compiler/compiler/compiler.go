@@ -133,7 +133,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 			return err
 		}
 
-		if c.lastInstructionIsPop(code.OpPop) {
+		if c.lastInstructionIs(code.OpPop) {
 			c.removeLastPop()
 		}
 
@@ -150,7 +150,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 				return err
 			}
 
-			if c.lastInstructionIsPop(code.OpPop) {
+			if c.lastInstructionIs(code.OpPop) {
 				c.removeLastPop()
 			}
 		}
@@ -232,8 +232,11 @@ func (c *Compiler) Compile(node ast.Node) error {
 			return err
 		}
 
-		if c.lastInstructionIsPop(code.OpPop) {
+		if c.lastInstructionIs(code.OpPop) {
 			c.replaceLastPopWithReturn()
+		}
+		if !c.lastInstructionIs(code.OpReturnValue) {
+			c.emit(code.OpReturn)
 		}
 
 		instructions := c.leaveScope()
@@ -287,7 +290,7 @@ func (c *Compiler) setLastInstruction(op code.Opcode, pos int) {
 	c.scopes[c.scopeIndex].lastInstruction = last
 }
 
-func (c *Compiler) lastInstructionIsPop(op code.Opcode) bool {
+func (c *Compiler) lastInstructionIs(op code.Opcode) bool {
 	if len(c.currentInstructions()) == 0 {
 		return false
 	}
