@@ -146,6 +146,7 @@ func (vm *VM) Run() error {
 			}
 
 			vm.sp = vm.sp - numElements
+			err = vm.push(hash)
 			if err != nil {
 				return err
 			}
