@@ -24,8 +24,28 @@ var Builtins = []struct{
 		},
 	},
 	},
+	{
+		"puts",
+		&Builtin{Fn: func(args ...Object) Object {
+			for _, arg := range args {
+				fmt.Println(arg.Inspect())
+			}
+
+			return nil
+		},
+	},
+	},
 }
 
 func newError(format string, a ...interface{}) *Error {
 	return &Error{Message: fmt.Sprintf(format, a...)}
+}
+
+func GetBuiltinByName(name string) *Builtin {
+	for _, def := range Builtins {
+		if def.Name == name {
+			return def.Builtin
+		}
+	}
+	return nil
 }
