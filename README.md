@@ -18,5 +18,3 @@ The language currently supports the following features:
 - functions
 
 To test out the interpreter/compiler, go to their respective folder and run `go run main.go` to start the REPL in the command line. 
-
-Compiler is a work in progress!
