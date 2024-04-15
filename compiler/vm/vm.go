@@ -481,3 +481,17 @@ func (vm *VM) callFunction(fn *object.CompiledFunction, numArgs int) error {
 	vm.sp = frame.basePointer + fn.NumLocals
 	return nil
 }
+
+func (vm *VM) callBuiltin(builtin *object.Builtin, numArgs int) error {
+	args := vm.stack[vm.sp-numArgs : vm.sp]
+	result := builtin.Fn(args...)
+	vm.sp = vm.sp - numArgs - 1
+
+	if result != nil {
+		vm.push(result)
+	} else {
+		vm.push(Null)
+	}
+
+	return nil
+}
